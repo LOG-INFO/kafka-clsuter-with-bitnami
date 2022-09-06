@@ -1,0 +1,34 @@
+replicaCount: 3
+defaultReplicationFactor: 3
+offsetsTopicReplicationFactor: 3
+transactionStateLogReplicationFactor: 3
+persistence:
+  enabled: true
+#  existingClaim: "kafka"
+ 
+zookeeper:
+  replicaCount: 3
+#  persistence:
+#    existingClaim: "zookeeper"
+
+metrics:
+  kafka:
+    enabled: true
+  jmx:
+    enabled: true    
+#  serviceMonitor:
+#    enabled: true
+#    namespace: "default"
+#    interval: "5s"
+#    scrapeTimeout: "16s"
+    
+externalAccess:
+  enabled: true
+  service:
+    type: NodePort
+    nodePorts:
+      - 30001
+      - 30002
+      - 30003
+    useHostIPs: true
+    domain: "192.168.1.1"

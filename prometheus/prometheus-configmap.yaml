@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+ name: prometheus
+ labels:
+   name: prometheus
+data:
+ prometheus.yml: |-
+   global:
+     scrape_interval: 5s
+     evaluation_interval: 5s
+   scrape_configs:
+   - job_name: kafka-exporter
+     static_configs:
+     - targets:
+       - kafka-metrics.default.svc.cluster.local:9308
+   - job_name: jmx-exporter
+     static_configs:
+     - targets:
+       - kafka-jmx-metrics.default.svc.cluster.local:5556
