@@ -6,24 +6,24 @@
 - Helm
 
 ## Getting Started
-#### 1. 본 Git Repository를 Clone한다
+### 1. 본 Git Repository를 Clone한다
 ```bash
 $ git clone git@github.com:LOG-INFO/kafka-clsuter-with-bitnami.git
 ```
 
-#### 2. Bitnami Helm Repository를 추가한다
+### 2. Bitnami Helm Repository를 추가한다
 ```bash
 $ helm repo add bitnami https://charts.bitnami.com/bitnami
 ```
 
-#### 3. Bitnami kafka Helm Chart를 실행한다
+### 3. Bitnami kafka Helm Chart를 실행한다
 ```bash
 # 기본 values.yaml이 있긴 하지만, 덮어쓰고 싶은 내용들은 kafka/values.yaml을 참조한다
 # 설정값을 변경하고 싶다면 https://github.com/bitnami/charts/tree/master/bitnami/kafka/#installing-the-chart 를 참고한다
 $ helm install kafka -f kafka/values.yaml bitnami/kafka
 ```
 
-#### 4. Kubernetes Pods, Services가 잘 생성되었는지 확인한다
+### 4. Kubernetes Pods, Services가 잘 생성되었는지 확인한다
 ```bash
 $ kubectl get pods                                                                                                                                               INT  rancher-desktop kube
 NAME                             READY   STATUS    RESTARTS      AGE
@@ -48,7 +48,7 @@ kafka-metrics              ClusterIP   10.43.242.108   <none>        9308/TCP   
 kafka-jmx-metrics          ClusterIP   10.43.201.19    <none>        5556/TCP                     1m
 ```
 
-#### 5. Kafka가 잘 동작하는지 확인한다
+### 5. Kafka가 잘 동작하는지 확인한다
 ```bash
 $ kafka-console-consumer.sh --bootstrap-server localhost:30001,localhost:30002,localhost:30003 --topic test --from-beginning --group test
 ```
@@ -57,12 +57,12 @@ $ kafka-console-consumer.sh --bootstrap-server localhost:30001,localhost:30002,l
 $ kafka-console-producer.sh --bootstrap-server localhost:30001,localhost:30002,localhost:30003 --topic test
 ```
 
-#### 6. 모니터링 지표 수집을 위한 Prometheus, Grafana의 Deployment, Service를 생성한다
+### 6. 모니터링 지표 수집을 위한 Prometheus, Grafana의 Deployment, Service를 생성한다
 ```bash
 $ kubectl apply -f prometheus,grafana
 ```
 
-#### 7. Prometheus, Grafana의 Pods, Services가 잘 생성되었는지 확인한다
+### 7. Prometheus, Grafana의 Pods, Services가 잘 생성되었는지 확인한다
 ```bash
 kubectl get pods                                                                                                                                               INT  rancher-desktop kube
 NAME                             READY   STATUS    RESTARTS      AGE
@@ -75,7 +75,7 @@ grafana                    NodePort    10.43.194.39    <none>        3000:31000/
 prometheus                 NodePort    10.43.224.108   <none>        9090:31001/TCP               1m
 ```
 
-#### 8. Prometheus, Grafana에 접속한다
+### 8. Prometheus, Grafana에 접속한다
 - Prometheus: http://localhost:31001/
   - Query 확인
     - ![image](https://user-images.githubusercontent.com/29394651/188572246-c9cd1974-3c93-4c49-8699-22be41b50642.png)
@@ -86,18 +86,25 @@ prometheus                 NodePort    10.43.224.108   <none>        9090:31001/
   - 처음엔 Grafana에 아무 대시보드도 존재하지 않는다
   - ![image](https://user-images.githubusercontent.com/29394651/188572350-7e9c01e7-cd95-4b78-962b-d09b9ef12411.png)
 
-#### 9. Grafana Dashboard 추가
+### 9. Grafana에 DataSource 추가
+1. DataSource 추가 버튼 클릭 -> `Prometheus` 선택
+  - ![image](https://user-images.githubusercontent.com/29394651/188573154-65d1ad9d-9c12-4a50-8cce-a91e702ba923.png)
+2. URL에 Prometheus의 [Kubernetes Service DNS]([url](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)) 입력 후 하단의 `Save $ Test` 클릭 - `http://prometheus.default.svc.cluster.local:9090`
+  - ![image](https://user-images.githubusercontent.com/29394651/188573549-0e7e2cfa-174d-4f25-b0e9-417e24c42225.png)
+  - ![image](https://user-images.githubusercontent.com/29394651/188574259-4953d08a-3124-404b-bc8c-697e40a5df78.png)
+
+### 10. Garafana에 Dashboard 추가
 - Kafka JMX Grafana Dashboard
   - https://grafana.com/grafana/dashboards/12483-kubernetes-kafka/
 - Kafka Grafana Dashboard
   - 
 
-#### 10. 카프카 클러스터를 종료한다
+### 11. 카프카 클러스터를 종료한다
 ```bash
 $ helm delete kafka
 ```
 
-#### 11. Prometheus, Grafana도 종료한다
+### 12. Prometheus, Grafana도 종료한다
 ```bash
 $ kubectl delete -f prometheus,grafana
 ```
