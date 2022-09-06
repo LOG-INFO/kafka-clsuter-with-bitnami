@@ -75,12 +75,29 @@ grafana                    NodePort    10.43.194.39    <none>        3000:31000/
 prometheus                 NodePort    10.43.224.108   <none>        9090:31001/TCP               1m
 ```
 
-#### 8. 카프카 클러스터를 종료한다
+#### 8. Prometheus, Grafana에 접속한다
+- Prometheus: http://localhost:31001/
+  - Query 확인
+    - ![image](https://user-images.githubusercontent.com/29394651/188572246-c9cd1974-3c93-4c49-8699-22be41b50642.png)
+  - Targets 확인
+    - ![image](https://user-images.githubusercontent.com/29394651/188572790-32e7db75-ad35-45f4-a3d1-1599ff841d9b.png)
+- Grafana: http://localhost:31000/
+  - Grafana의 초기 계정은 `admin`/`admin`이다
+  - 처음엔 Grafana에 아무 대시보드도 존재하지 않는다
+  - ![image](https://user-images.githubusercontent.com/29394651/188572350-7e9c01e7-cd95-4b78-962b-d09b9ef12411.png)
+
+#### 9. Grafana Dashboard 추가
+- Kafka JMX Grafana Dashboard
+  - https://grafana.com/grafana/dashboards/12483-kubernetes-kafka/
+- Kafka Grafana Dashboard
+  - 
+
+#### 10. 카프카 클러스터를 종료한다
 ```bash
 $ helm delete kafka
 ```
 
-#### 9. Prometheus, Grafana도 종료한다
+#### 11. Prometheus, Grafana도 종료한다
 ```bash
 $ kubectl delete -f prometheus,grafana
 ```
