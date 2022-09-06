@@ -19,6 +19,7 @@ $ helm repo add bitnami https://charts.bitnami.com/bitnami
 #### 3. Bitnami kafka Helm Chart를 실행한다
 ```bash
 # 기본 values.yaml이 있긴 하지만, 덮어쓰고 싶은 내용들은 kafka/values.yaml을 참조한다
+# 설정값을 변경하고 싶다면 https://github.com/bitnami/charts/tree/master/bitnami/kafka/#installing-the-chart 를 참고한다
 $ helm install kafka -f kafka/values.yaml bitnami/kafka
 ```
 
@@ -68,10 +69,21 @@ NAME                             READY   STATUS    RESTARTS      AGE
 prometheus-776fd895bc-vg87g      1/1     Running   1             1m
 grafana-9bd5bbd6b-x5khn          1/1     Running   1             1m
 
-$ kubectl get services                                                                                                                                                  ok  rancher-desktop kube
+$ kubectl get services                                                                                                                                                 
 NAME                       TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                      AGE
 grafana                    NodePort    10.43.194.39    <none>        3000:31000/TCP               1m
 prometheus                 NodePort    10.43.224.108   <none>        9090:31001/TCP               1m
 ```
+
+#### 8. 카프카 클러스터를 종료한다
+```bash
+$ helm delete kafka
+```
+
+#### 9. Prometheus, Grafana도 종료한다
+```bash
+$ kubectl delete -f prometheus,grafana
+```
+
 ## 참고
 - https://bitnami.com/stack/kafka/helm
