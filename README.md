@@ -1,5 +1,5 @@
 # 5분만에 Apache Kafka Cluster 만들어보기 
-(With [Bitnami Helm Chart]([url](https://github.com/bitnami/charts)))
+(with [Bitnami Helm Chart](https://github.com/bitnami/charts))
 
 ## 준비물
 - Docker
