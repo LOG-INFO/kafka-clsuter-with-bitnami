@@ -7,6 +7,7 @@
   - 여기서는 [Rancher](https://rancher.com/)를 이용하였다
   - [Minikube](https://minikube.sigs.k8s.io/docs/start/)를 이용한다면 아래의 실습의 `localhost` 부분들을 `minikube ip`로 대체해야 한다(`$minikube ip`로 조회)
 - Helm
+- Kafka Client
 
 ## Getting Started
 ### 1. 본 Git Repository를 Clone한다
