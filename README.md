@@ -15,7 +15,7 @@
 $ git clone git@github.com:LOG-INFO/kafka-clsuter-with-bitnami.git
 ```
 
-### 2. Bitnami Helm Repository를 추가한다
+### 2. Bitnami Helm Repository를 추가한다 ([Helm 설치](https://helm.sh/docs/intro/install/))
 ```bash
 $ helm repo add bitnami https://charts.bitnami.com/bitnami
 ```
@@ -53,12 +53,23 @@ kafka-jmx-metrics          ClusterIP   10.43.201.19    <none>        5556/TCP   
 ```
 
 ### 5. Kafka가 잘 동작하는지 확인한다
-```bash
-$ kafka-console-consumer.sh --bootstrap-server localhost:30001,localhost:30002,localhost:30003 --topic test --from-beginning --group test
+
+> 동작수행 확인을 위한 임시 컨테이너를 띄운다.
+
+1. 임시 컨테이너에서 콘솔 프로듀서를 띄워서 카프카 메시지 전송을 테스트
+
+```sh
+$ docker run --network host --rm -it -u 0 bitnami/kafka /bin/bash
+root@docker-desktop:/# /opt/bitnami/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:30001,localhost:30002,localhost:30003 --topic test
+>{"message":"test_message"}
+>^C # Ctrl + C
 ```
-(다른 bash 추가로 띄운 상태에서)
-```bash
-$ kafka-console-producer.sh --bootstrap-server localhost:30001,localhost:30002,localhost:30003 --topic test
+
+2. 테스트 메시지 컨슈밍 테스트
+
+```
+root@docker-desktop:/# /opt/bitnami/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:30001,localhost:30002,localhost:30003 --topic test --from-beginning --group test
+{"message":"test_message"} # 메시지 입수 확인
 ```
 
 ### 6. 모니터링 지표 수집을 위한 Prometheus, Grafana의 Deployment, Service를 생성한다
@@ -82,21 +93,21 @@ prometheus                 NodePort    10.43.224.108   <none>        9090:31001/
 ### 8. Prometheus, Grafana에 접속한다
 - Prometheus: http://localhost:31001/
   - Query 확인
-    - ![image](https://user-images.githubusercontent.com/29394651/188572246-c9cd1974-3c93-4c49-8699-22be41b50642.png)
+    - ![image](img/figure1.png)
   - Targets 확인
-    - ![image](https://user-images.githubusercontent.com/29394651/188572790-32e7db75-ad35-45f4-a3d1-1599ff841d9b.png)
+    - ![image](img/figure2.png)
 - Grafana: http://localhost:31000/
   - Grafana의 초기 계정은 `admin`/`admin`이다
   - 처음엔 Grafana에 아무 대시보드도 존재하지 않는다
-  - ![image](https://user-images.githubusercontent.com/29394651/188572350-7e9c01e7-cd95-4b78-962b-d09b9ef12411.png)
+  - ![image](img/figure3.png)
 
 ### 9. Grafana에 DataSource 추가
 #### 1. DataSource 추가 버튼 클릭 -> `Prometheus` 선택
-- ![image](https://user-images.githubusercontent.com/29394651/188573154-65d1ad9d-9c12-4a50-8cce-a91e702ba923.png)
+- ![image](img/figure4.png)
 #### 2. URL에 Prometheus의 [Kubernetes Service DNS]([url](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)) 입력 - `http://prometheus.default.svc.cluster.local:9090`
-- ![image](https://user-images.githubusercontent.com/29394651/188573549-0e7e2cfa-174d-4f25-b0e9-417e24c42225.png)
+- ![image](img/figure5.png)
 #### 3. 하단의 `Save $ Test` 클릭
-- ![image](https://user-images.githubusercontent.com/29394651/188574259-4953d08a-3124-404b-bc8c-697e40a5df78.png)
+- ![image](img/figure6.png)
 
 ### 10. Garafana에 Dashboard 추가
 - Kafka JMX Grafana Dashboard (Grafana Dashboard ID: `12483`)
@@ -105,25 +116,25 @@ prometheus                 NodePort    10.43.224.108   <none>        9090:31001/
   - https://grafana.com/grafana/dashboards/7589-kafka-exporter-overview/
 
 #### 1. Dashboard Import 클릭
-- ![image](https://user-images.githubusercontent.com/29394651/188575772-3f678541-79c0-4d93-bd1e-8f8dc642b086.png)
+- ![image](img/figure7.png)
 
 #### 2. `Import via grafana.com`에 `12483` 입력 후 `Load` 버튼 클릭
-![image](https://user-images.githubusercontent.com/29394651/188576218-389523d5-744a-4dca-8e17-4373c313efa7.png)
+![image](img/figure8.png)
 
 #### 3. Data Source 선택 후 `Import` 버튼 클릭
-![image](https://user-images.githubusercontent.com/29394651/188577070-25d7e0b0-b3db-4d07-b666-feb76b014314.png)
+![image](img/figure9.png)
 
 #### 4. Dashboard 추가된 것 확인
-![image](https://user-images.githubusercontent.com/29394651/188577213-d8fde6db-c69e-4c9f-b4de-6f9420e7e7b6.png)
+![image](img/figure10.png)
 
 #### 5. 다시 Dashboard Import로 가서 `Import via grafana.com`에 `7589` 입력 후 `Load` 버튼 클릭
-![image](https://user-images.githubusercontent.com/29394651/188576435-1ebe6a58-287e-49cd-9e33-337f3e3ca201.png)
+![image](img/figure11.png)
 
 #### 6. Data Source 선택 후 `Import` 버튼 클릭
-![image](https://user-images.githubusercontent.com/29394651/188576771-23df3b44-8e90-4e32-863f-f2fc04700916.png)
+![image](img/figure12.png)
 
 #### 7. Dashboard 추가된 것 확인
-![image](https://user-images.githubusercontent.com/29394651/188577347-3e5e9d8b-3662-434b-abbe-55c2cd2cf563.png)
+![image](img/figure13.png)
 
 ### 11. 카프카 클러스터를 종료한다
 ```bash
